@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Dummy Server": {
+      "commandName": "Executable",
+      "executablePath": "G:\\Dev\\Personal_Private\\YASP\\src\\YASP.Server\\bin\\Debug\\net6.0\\YASP.Server.exe",
+      "commandLineArgs": "--urls=http://localhost:6001",
+      "workingDirectory": "G:\\Dev\\Personal_Private\\YASP\\src\\YASP.Server.Dummy",
+      "remoteDebugEnabled": false
+    }
+  }
+}

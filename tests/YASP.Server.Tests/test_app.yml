@@ -1,0 +1,48 @@
+revision: 1
+notifications:
+  enabled: true
+  email:
+    host: test
+    port: 1
+    username: username
+    password: password
+    sender_address: sender@example.com
+    sender_display_name: YASP Status Monitoring
+    recipients:
+      admin@example.com:
+      - httptest
+pages:
+- id: test
+  display_name: Test
+  description: Test status page
+  categories:
+  - display_name: 
+    monitors:
+    - monitor_id: httptest
+      display_name: HTTP Test
+monitors:
+- id: tcptest
+  display_name: TCP Test
+  check_with: 3
+  interval: '*/10 * * * * *'
+  timeout: 20
+  available_threshold: 1
+  partial_threshold: 0.5
+  http: 
+  tcp:
+    host: localhost
+    port: 6000
+- id: httptest
+  display_name: HTTP Test
+  check_with: 3
+  interval: '*/10 * * * * *'
+  timeout: 20
+  available_threshold: 1
+  partial_threshold: 0.5
+  http:
+    url: http://localhost:6000
+    keyword: Hello World!
+    method: get
+    status_codes:
+    - 200-399
+  tcp: 

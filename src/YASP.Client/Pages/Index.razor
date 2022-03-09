@@ -1,0 +1,373 @@
+﻿@page "/{PageId}"
+@using YASP.Client.Application.Pages.Objects
+@using YASP.Shared.Objects
+
+@if (IsLoading)
+{
+    <div class="container mx-auto px-4 pt-8 md:pt-32 max-w-7xl">
+        <div class="flex justify-between flex-col md:flex-row">
+            <div class="order-2 md:order-1 w-full space-y-2">
+                <div class="w-full max-w-3xl h-12 bg-zinc-600"></div>
+                <div class="w-full max-w-4xl h-8 bg-zinc-600"></div>
+            </div>
+
+            <div class="flex order-1 mb-7 md:mb-0 md:order-2 md:ml-6 self-end md:self-start">
+                <div class="flex flex-col items-end gap-y-2">
+                    <div class="h-4 w-32 bg-zinc-600"></div>
+                    <div class="h-4 w-36 bg-zinc-600"></div>
+                </div>
+
+                <div class="h-12 w-12 bg-lime-300 rounded ml-4 grid place-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 animate-spin text-zinc-900" fill="none"
+                    viewBox="0 0 24 24" transform="scale(-1, -1)" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-20 space-y-6">
+            <div class="bg-zinc-800 rounded p-6">
+                <div class="w-full max-w-3xl h-10 bg-zinc-700"></div>
+
+                <div class="mt-8 space-y-6">
+                    <div class="">
+                        <div class="w-full md:max-w-lg h-6 bg-zinc-700"></div>
+                        <div class="w-full mt-2 h-8 bg-zinc-700"></div>
+                    </div>
+
+                    <div class="">
+                        <div class="w-full md:max-w-lg h-6 bg-zinc-700"></div>
+                        <div class="w-full mt-2 h-8 bg-zinc-700"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-zinc-800 rounded p-6">
+                <div class="w-full max-w-3xl h-10 bg-zinc-700"></div>
+
+                <div class="mt-8 space-y-6">
+                    <div class="">
+                        <div class="w-full md:max-w-lg h-6 bg-zinc-700"></div>
+                        <div class="w-full mt-2 h-8 bg-zinc-700"></div>
+                    </div>
+
+                    <div class="">
+                        <div class="w-full md:max-w-lg h-6 bg-zinc-700"></div>
+                        <div class="w-full mt-2 h-8 bg-zinc-700"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+else if (!IsPageFound)
+{
+    <div class="grid place-items-center min-h-full">
+        <div class="flex flex-col items-center">
+            <h1 class="text-3xl text-center text-zinc-100 mb-3">Sorry!</h1>
+            <h2 class="text-xl text-center text-zinc-300">We searched far and wide, but we couldn't find this page..</h2>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mx-auto px-4 pt-8 md:pt-32 max-w-7xl">
+        <div class="flex justify-between flex-col md:flex-row">
+            <div class="order-2 md:order-1 space-y-2">
+                <h1 class="text-3xl text-white font-bold">@Data.ApiData.DisplayName</h1>
+                <h2 class="text-xl">@Data.ApiData.Description</h2>
+            </div>
+
+            <div class="flex order-1 mb-7 md:mb-0 md:order-2 md:ml-6 self-end md:self-start">
+                <div class="flex flex-col items-end">
+                    <div class="font-semibold">Last refresh at @LastRefresh.ToString("HH:mm:ss")</div>
+
+                    @{
+                        var nextRefreshIn = NextRefresh - DateTimeOffset.Now;
+
+                        if (nextRefreshIn < TimeSpan.Zero)
+                        {
+                            nextRefreshIn = TimeSpan.Zero;
+                        }
+                    }
+
+                    @if (!IsRefreshing)
+                    {
+                        <div class="">Automatic refresh in @nextRefreshIn.ToString(@"mm\:ss")</div>
+                    }
+                    else
+                    {
+                        <div class="">Refreshing..</div>
+                    }
+                </div>
+
+                <button
+                class="h-12 w-12 bg-lime-300 rounded ml-4 grid place-items-center transition-default hover:bg-lime-500 disabled:bg-lime-600"
+                disabled="@(IsRefreshing ? "" : null)" @onclick="() => RefreshAsync(true)">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-zinc-900 @(IsRefreshing ? "animate-spin" : "")" fill="none" viewBox="0 0 24 24"
+                    transform="scale(-1, -1)" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-20 space-y-6">
+            @foreach (var categoryTuple in Data.ApiData.Categories.Select((x, i) => new { Category = x, Index = i }))
+            {
+                var category = categoryTuple.Category;
+
+                //var categoryHasMonitorShowingDetails = ShowSegmentDetails != null && category.Monitors.Any(x => x.MonitorId == ShowSegmentDetails.MonitorId && x.)
+
+                <div class="bg-zinc-800 rounded p-6 py-8 @(ShowDetails.Item1 == categoryTuple.Index ? "z-10" : "")">
+                    @if (!string.IsNullOrEmpty(category.DisplayName))
+                    {
+                        <h1 class="font-bold text-2xl mb-8 text-white">@category.DisplayName</h1>
+                    }
+
+                    <div class="space-y-6">
+                        @foreach (var monitorTuple in category.Monitors.Select((x, i) => new { Monitor = x, Index = i }))
+                        {
+                            var monitor = monitorTuple.Monitor;
+
+                            var segments = Data.Segments[monitor.MonitorId];
+
+                            MonitorStatusEnumDto latestStatus = MonitorStatusEnumDto.Unknown;
+
+                            DateTimeOffset latestStatusDate = default;
+                            var lastStatus = monitor.States.OrderBy(x => x.CheckTimestamp).LastOrDefault();
+
+                            if (lastStatus != null)
+                            {
+                                latestStatus = lastStatus.MonitorStatus;
+                                latestStatusDate = lastStatus.CheckTimestamp;
+                            }
+
+                            <div class="justify-items-start border-zinc-700 relative @(ShowDetails.Item2 == monitorTuple.Index && ShowDetails.Item3 == monitor.MonitorId ? "z-10" : "")">
+                                <div class="flex justify-between">
+                                    <div class="font-semibold text-lg">
+                                        @monitor.DisplayName
+                                    </div>
+
+                                    @if (latestStatus == MonitorStatusEnumDto.Unknown)
+                                    {
+                                        <div class="font-bold text-lg align-bottom">Unknown</div>
+                                    }
+                                    else if (latestStatus == MonitorStatusEnumDto.NotReachable)
+                                    {
+                                        <div class="font-bold text-lg text-red-600 align-bottom">Not operational</div>
+                                    }
+                                    else if (latestStatus == MonitorStatusEnumDto.PartiallyReachable)
+                                    {
+                                        <div class="font-bold text-lg text-orange-600 align-bottom">Partially operational</div>
+                                    }
+                                    else if (latestStatus == MonitorStatusEnumDto.Reachable)
+                                    {
+                                        <div class="font-bold text-lg text-lime-400 align-bottom">Operational</div>
+                                    }
+                                </div>
+
+                                <div class="flex space-x-1 mt-2">
+                                    @foreach (var segment in segments)
+                                    {
+                                        if (segment.LowestStatus == MonitorStatusEnumDto.Unknown)
+                                        {
+                                            <div class="group grow relative">
+                                                <div class="h-4 bg-zinc-600 grow text-sm cursor-pointer group-hover:translate-y-[-2px] transition-all ease-in-out duration-200" @onclick="() => ShowSegmentTooltip(categoryTuple.Index, monitorTuple.Index, monitor.MonitorId, segment.From)"></div>
+                                            
+                                                <div class="absolute z-10 -top-10 pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-200">
+                                                    <div class="bg-white text-zinc-900 px-2 py-2">
+                                                        <div class="text-xs font-semibold whitespace-nowrap">@segment.From.ToLocalTime().ToString("HH:mm") - @segment.To.ToLocalTime().ToString("HH:mm")</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (segment.LowestStatus == MonitorStatusEnumDto.NotReachable)
+                                        {
+                                            <div class="group grow relative">
+                                                <div class="h-4 bg-red-500 grow text-sm cursor-pointer group-hover:translate-y-[-2px] transition-all ease-in-out duration-200" @onclick="() => ShowSegmentTooltip(categoryTuple.Index, monitorTuple.Index, monitor.MonitorId, segment.From)"></div>
+                                            
+                                                <div class="absolute z-10 -top-10 pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-200">
+                                                    <div class="bg-white text-zinc-900 px-2 py-2">
+                                                        <div class="text-xs font-semibold whitespace-nowrap">@segment.From.ToLocalTime().ToString("HH:mm") - @segment.To.ToLocalTime().ToString("HH:mm")</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (segment.LowestStatus == MonitorStatusEnumDto.PartiallyReachable)
+                                        {
+                                            <div class="group grow relative">
+                                                <div class="h-4 bg-orange-400 grow text-sm cursor-pointer group-hover:translate-y-[-2px] transition-all ease-in-out duration-200" @onclick="() => ShowSegmentTooltip(categoryTuple.Index, monitorTuple.Index, monitor.MonitorId, segment.From)"></div>
+                                            
+                                                <div class="absolute z-10 -top-10 pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-200">
+                                                    <div class="bg-white text-zinc-900 px-2 py-2">
+                                                        <div class="text-xs font-semibold whitespace-nowrap">@segment.From.ToLocalTime().ToString("HH:mm") - @segment.To.ToLocalTime().ToString("HH:mm")</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (segment.LowestStatus == MonitorStatusEnumDto.Reachable)
+                                        {
+                                            
+                                            <div class="group grow relative">
+                                                <div class="h-4 bg-lime-400 grow text-sm cursor-pointer group-hover:translate-y-[-2px] transition-all ease-in-out duration-200" @onclick="() => ShowSegmentTooltip(categoryTuple.Index, monitorTuple.Index, monitor.MonitorId, segment.From)"></div>
+                                            
+                                                <div class="absolute z-10 -top-10 pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 transition-opacity ease-in-out duration-200">
+                                                    <div class="bg-white text-zinc-900 px-2 py-2">
+                                                        <div class="text-xs font-semibold whitespace-nowrap">@segment.From.ToLocalTime().ToString("HH:mm") - @segment.To.ToLocalTime().ToString("HH:mm")</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        if (ShowDetails == (categoryTuple.Index, monitorTuple.Index, monitor.MonitorId, segment.From))
+                                        {
+                                            string GetSegmentDetailsHeaderClasses(StatusPageData.Segment segment) => segment.LowestStatus switch
+                                            {
+                                                MonitorStatusEnumDto.Unknown => "bg-zinc-600 text-white",
+                                                MonitorStatusEnumDto.NotReachable => "bg-red-500 text-white",
+                                                MonitorStatusEnumDto.PartiallyReachable => "bg-orange-400 text-white",
+                                                MonitorStatusEnumDto.Reachable => "bg-lime-400 text-zinc-900",
+                                                _ => throw new NotImplementedException()
+                                            };
+
+                                            string GetSegmentDetailsContainerClasses(StatusPageData.Segment segment) => segment.LowestStatus switch
+                                            {
+                                                MonitorStatusEnumDto.Unknown => "border-zinc-600",
+                                                MonitorStatusEnumDto.NotReachable => "border-red-500",
+                                                MonitorStatusEnumDto.PartiallyReachable => "border-orange-400",
+                                                MonitorStatusEnumDto.Reachable => "border-lime-400",
+                                                _ => throw new NotImplementedException()
+                                            };
+
+                                            <!-- Mouseover -->
+                                            <div class="absolute left-0 top-0 w-full pointer-events-none">
+                                                <div class="-ml-1">
+                                                    <div class="w-full bg-zinc-800 z-10 mt-24 border shadow-2xl pointer-events-auto @GetSegmentDetailsContainerClasses(segment)">
+                                                        <div class="flex items-center justify-between py-1 @GetSegmentDetailsHeaderClasses(segment)">
+                                                            <div class="ml-4 font-semibold">@segment.From.ToLocalTime().ToString("HH:mm") - @segment.To.ToLocalTime().ToString("HH:mm")</div>
+                                                            <button class="px-2 py-1 mr-1 flex items-center text-sm hover:bg-black/25" @onclick="HideSegmentTooltip">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                                </svg>
+
+                                                                Hide details
+                                                            </button>
+                                                        </div>
+
+                                                        <div class="p-4">
+                                                            @if (segment.LowestStatus == MonitorStatusEnumDto.Unknown)
+                                                            {
+                                                                <div>Service status unknown.</div>
+                                                            }
+                                                            else
+                                                            {
+                                                                var previousStatus = segment.InitialStatus;
+
+                                                                <div class="flex flex-col space-y-3">
+                                                                    @if (segment.StateChanges.Count == 0) {
+                                                                        <div>
+                                                                            Service availability was continously
+
+                                                                            @if (previousStatus == MonitorStatusEnumDto.Unknown)
+                                                                            {
+                                                                                <span class="italic font-semibold">Unknown</span>
+                                                                            }
+                                                                            else if (previousStatus == MonitorStatusEnumDto.NotReachable)
+                                                                            {
+                                                                                <span class="italic font-semibold text-red-500">Not Operational</span>
+                                                                            }
+                                                                            else if (previousStatus == MonitorStatusEnumDto.PartiallyReachable)
+                                                                            {
+                                                                                <span class="italic font-semibold text-orange-400">Partially Operational</span>
+                                                                            }
+                                                                            else if (previousStatus == MonitorStatusEnumDto.Reachable)
+                                                                            {
+                                                                                <span class="italic font-semibold text-lime-400">Operational</span>
+                                                                            }
+                                                                        </div>
+                                                                    }
+
+                                                                    @foreach (var state in segment.StateChanges)
+                                                                    {
+                                                                       <div class="flex md:flex-row">
+                                                                           <div class="w-20 flex-shrink-0 font-mono font-semibold text-white">@state.CheckTimestamp.ToLocalTime().ToString("HH:mm:ss")</div>
+                                                                           <div>
+                                                                               Availability changed from
+                                                                               
+                                                                               @if (previousStatus == MonitorStatusEnumDto.Unknown)
+                                                                               {
+                                                                                   <span class="italic font-semibold">Unknown</span>
+                                                                               }
+                                                                               else if (previousStatus == MonitorStatusEnumDto.NotReachable)
+                                                                               {
+                                                                                   <span class="italic font-semibold text-red-500">Not Operational</span>
+                                                                               }
+                                                                               else if (previousStatus == MonitorStatusEnumDto.PartiallyReachable)
+                                                                               {
+                                                                                   <span class="italic font-semibold text-orange-400">Partially Operational</span>
+                                                                               }
+                                                                               else if (previousStatus == MonitorStatusEnumDto.Reachable)
+                                                                               {
+                                                                                   <span class="italic font-semibold text-lime-400">Operational</span>
+                                                                               }
+
+                                                                               to
+
+                                                                               @if (state.MonitorStatus == MonitorStatusEnumDto.Unknown)
+                                                                               {
+                                                                                   <span class="italic font-semibold">Unknown</span>
+                                                                               }
+                                                                               else if (state.MonitorStatus == MonitorStatusEnumDto.NotReachable)
+                                                                               {
+                                                                                   <span class="italic font-semibold text-red-500">Not Operational</span>
+                                                                               }
+                                                                               else if (state.MonitorStatus == MonitorStatusEnumDto.PartiallyReachable)
+                                                                               {
+                                                                                   <span class="italic font-semibold text-orange-400">Partially Operational</span>
+                                                                               }
+                                                                               else if (state.MonitorStatus == MonitorStatusEnumDto.Reachable)
+                                                                               {
+                                                                                   <span class="italic font-semibold text-lime-400">Operational</span>
+                                                                               }
+                                                                           </div>
+                                                                       </div> 
+
+                                                                       previousStatus = state.MonitorStatus;
+                                                                    }                                                                    
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+
+                                <div class="flex justify-between mt-2">
+                                    <div class="font-normal text-zinc-400 text-sm">24 hours ago</div>
+                                    <div class="font-normal text-zinc-400 text-sm">
+                                        @if (latestStatusDate != default)
+                                        {
+                                            <span>Now, last change @latestStatusDate.ToLocalTime().ToString("dd.MM.yy HH:mm:ss")</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Now, not tracked yet</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

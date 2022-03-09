@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>c15dd63f-49b6-46f1-abbb-f3f612ae0a3d</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+	</PropertyGroup>
+	
+	<ItemGroup>
+	  <None Remove="appsettings.Development.yml" />
+	  <None Remove="appsettings.json.disabled" />
+	  <None Remove="node.yml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="YASP.Server.Tests" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="DotNext.AspNetCore.Cluster" Version="4.2.0" />
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+		<PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.1.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\YASP.Client\YASP.Client.csproj" />
+		<ProjectReference Include="..\YASP.Server.Application\YASP.Server.Application.csproj" />
+		<ProjectReference Include="..\YASP.Shared\YASP.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="data\" />
+	</ItemGroup>
+</Project>

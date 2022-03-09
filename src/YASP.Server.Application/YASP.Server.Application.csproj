@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="11.0.0" />
+		<PackageReference Include="Cronos" Version="0.7.1" />
+		<PackageReference Include="DotNext.AspNetCore.Cluster" Version="4.2.0" />
+		<PackageReference Include="DotNext.Net.Cluster" Version="4.2.0" />
+		<PackageReference Include="MailKit" Version="3.1.0" />
+		<PackageReference Include="MediatR" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+		<PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
+		<PackageReference Include="YamlDotNet" Version="11.2.1" />
+		<FrameworkReference Include="Microsoft.AspNetCore.App" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\YASP.Shared\YASP.Shared.csproj" />
+	</ItemGroup>
+
+</Project>

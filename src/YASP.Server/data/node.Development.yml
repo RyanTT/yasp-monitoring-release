@@ -1,0 +1,10 @@
+﻿http:
+  require_ssl: true
+  proxy:
+    trust_all: true
+
+cluster:
+  api_key: replace_me
+  listen_on: "https://localhost:7258"
+  discovery_endpoints: []
+    #- http://localhost:6001

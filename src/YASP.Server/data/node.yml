@@ -1,0 +1,37 @@
+﻿# Configuration of the HTTP webserver
+http:
+  # Should the HTTP webserver force HTTPs?
+  require_ssl: true
+
+  # Settings for when this HTTP webserver is run behind a proxy server
+  proxy:
+    # If the proxy server is not running on the same host as this webserver,
+    # then this setting must be set to true!
+    trust_all: true
+
+# Configuration on how the cluster can reach this node and 
+# what api key to use to connect to the discovery endpoints
+cluster:
+  # Cluster API key
+  api_key: replace_me
+
+  # Public endpoint of the HTTP webserver, aka. what other nodes will call to reach this node
+  listen_on: https://replace.me
+
+  # Public endpoints of discovery nodes
+  discovery_endpoints: []
+
+# Logging configuration
+logging:
+  Using:
+  - Serilog.Sinks.Console
+  WriteTo:
+  - Name: Console
+    Args:
+      outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}"
+      theme: "Serilog.Sinks.SystemConsole.Themes.AnsiConsoleTheme::Code, Serilog.Sinks.Console"
+  MinimumLevel:
+    Default: Error
+    Override:
+      YASP: Information
+      YASP.Server.Application.Clustering.Raft.RaftMemoryBasedStateMachine: Debug

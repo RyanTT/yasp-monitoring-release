@@ -1,0 +1,17 @@
+﻿<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(EmptyLayout)" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(EmptyLayout)">
+            <div class="grid place-items-center min-h-full">
+                <div class="flex flex-col items-center">
+                    <h1 class="text-3xl text-center text-zinc-100 mb-3">Sorry!</h1>
+                    <h2 class="text-xl text-center text-zinc-300">We searched far and wide, but we couldn't find this
+                        page..</h2>
+                </div>
+            </div>
+        </LayoutView>
+    </NotFound>
+</Router>
