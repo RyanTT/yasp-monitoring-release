@@ -60,7 +60,7 @@ The webserver will listen on port 5000 by default. To change it, set the environ
 version: "3"
 services:
   yasp:
-    image: 'ghcr.io/ryantt/yasp-monitoring:latest'
+    image: 'ghcr.io/ryantt/yasp-monitoring-release:latest'
     restart: unless-stopped
 
     ports:
